@@ -18,7 +18,7 @@ import jax
 import numpy as np
 import pyarrow as pa
 import regex
-import stanza
+import spacy
 from draccus import field
 from jaxtyping import PRNGKeyArray
 from tokenizers import normalizers
@@ -357,7 +357,7 @@ class BatchTokenizer(BatchProcessor[str]):
         self._vocab_size = tokenizer.vocab_size
         self._eos_token_id = tokenizer.eos_token_id
         self._max_sentence_len = _max_sentence_len
-        self._nlp = None
+        self._nlp = _nlp
 
     def __call__(self, batch: Sequence[str]) -> BatchEncoding:
         # break strings at the sentence level
@@ -366,10 +366,10 @@ class BatchTokenizer(BatchProcessor[str]):
         needs_merge = []
         wc = []
         if self._nlp is None:
-            self._nlp = stanza.Pipeline(lang="en", processors="tokenize", logging_level="ERROR")
+            self._nlp = spacy.load('en_core_web_sm')
         for i, d in enumerate(orig_batch):
             doc = self._nlp(d)
-            split_sentences = [sentence.text for sentence in doc.sentences]
+            split_sentences = [sentence.text for sentence in doc.sents]
             #split_sentences = re.split(r'(?<=[.!?])\s+', d)
             sentences = []
             for i in range(len(split_sentences)):
@@ -850,4 +850,3 @@ class LMMixtureDatasetConfig(LMTaskConfig):
             else:
                 caches[name] = cache
         return caches
-        

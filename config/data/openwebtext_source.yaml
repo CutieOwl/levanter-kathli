@@ -2,6 +2,10 @@ train_urls:
   - "gs://pubmed-mosaic/openwebtext-sharded/openwebtext_train.{1..128}-of-128.jsonl.gz"
 validation_urls:
   - "gs://pubmed-mosaic/openwebtext-sharded/openwebtext_val.{1..8}-of-8.jsonl.gz"
-cache_dir: "gs://levanter-data/tokenized/openwebtext_wcc_stanza/"
+cache_dir: "gs://levanter-data/tokenized/openwebtext_wcc_spacy/"
 #cache_dir: "/juice4/scr4/kathli/data_cache/openwebtext_wcc_stanza"
 tokenizer: "gpt2"
+tracker:
+  type: tensorboard
+  logdir: logs
+
